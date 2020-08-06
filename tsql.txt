@@ -1,0 +1,307 @@
+-- TSQL:
+
+-- select - Read data from tables
+-- DML : data manipulation - INSERT , UPDATE, DELETE
+-- DDL : data definition - CREATE , DROP
+-- TSQL : transact SQL , proc. lag.
+
+--BATCH
+DECLARE @i INT = 5
+PRINT(CONCAT('Batch 1 - ' , @i))
+go
+DECLARE @i INT  -- @i == NULL
+SET @i = 5		-- @i == 5
+PRINT(CONCAT('Batch 2 - ' , @i))
+go
+DECLARE @i INT
+SELECT @i = 5
+PRINT(CONCAT('Batch 3 - ' , @i))
+go
+SELECT @i as MyVar ;
+PRINT(@i)
+
+
+
+declare @s varchar(11) = '';
+SET @s = 'Hello'
+ print(@s)
+SET @s = @s + ' World'
+ print(@s)
+
+-- int = int , bigint --5 
+-- float = float , real , money , double, DECIMAL -- 5.5
+-- str = varchar(), nvarchar() , char() - 'piiza'
+-- bool = Bit (0/1) 0,1
+
+CHAR(5) = _ _ _ _ _ -- Onn _ _
+VARCHAR(5) = _ _ _ _ _ -- O n n.
+
+DECLARE @i INT = 5 , @name varchar(10) ='Onn M';
+SELECT @i as MyNum , @name as MyName
+SELECT @i = 12 , @name = 'PIZZA'
+SELECT @i , @name
+
+
+DECLARE @price Float ; -- 0.00
+	SET @price = 5.5
+	Print(@price)
+
+	SELECT @price = 15.13126546846
+	Print(@price)
+
+
+
+
+DECLARE @price Float ; -- 0.00
+
+SET @price = (SELECT UNITPRICE FROM Products a WHERE  a.ProductID = 12) -- scalar sub query
+
+SELECT @price
+
+
+ SELECT UNITPRICE 
+ FROM Products a 
+ WHERE  a.ProductID IN (10,11,12,13)
+
+DECLARE @price Float ;
+
+ SELECT @price = UNITPRICE 
+ FROM Products a 
+ WHERE  a.ProductID IN (10,11,12,13)
+
+SELECT @price
+
+
+
+
+
+
+-- use variable with DB:
+-- declare and initiate with the value 5.
+Declare @id INT = 5
+
+SELECT * FROM Products
+WHERE ProductID = @id
+GO;
+
+-- IF
+DECLARE @unitprice float, @id int = 7;
+
+SET @unitprice = (select unitprice from Products where ProductID =  @id)
+
+IF @unitprice > 20
+	BEGIN
+		Print('Wow!!!!')
+		Print('Expensivesdnjcfkasdbnfakj')
+	END
+ELSE IF @unitprice > 10
+	BEGIN
+		Print('Ok , Moderate')
+	END
+ELSE
+	BEGIN
+		Print('The Product it CHeap!!!!')
+		SET @id = 5
+		Print(CONCAT('Please check product number ',@id))
+		SET @unitprice = (select unitprice from Products where ProductID =  @id)
+		Print(@unitprice)
+	END
+	
+
+-- Q1)
+DECLARE @msg VARCHAR(100) = 'Today is the Date' , @date DATE;
+SET @date = GETDATE()
+SELECT CONCAT(@msg ,'-', @date)
+
+--Q2)
+DECLARE @name varchar(20) ;
+SELECT @name = LastName From Employees WHERE EmployeeID = 4
+SET @name = (SELECT LastName From Employees WHERE EmployeeID = 4)
+
+Print(@name)
+
+--Q3)
+DECLARE @pName varchar(50) , @cName varchar(50);
+SELECT @pName = a.ProductName
+	  ,@cName = b.CategoryName 
+From Products a 
+Join Categories b ON a.CategoryID = b.CategoryID
+WHERE a.ProductID = 5
+
+Print(CONCAT(@pName,' - ', @cName))
+
+--Q4)
+Declare @i int = 1
+WHILE @i <= 10
+	BEGIN
+		Print(@i)
+		SET @i = @i + 1
+	END
+
+--variable type table
+Declare @t Table
+(id int
+,Name varchar(10)
+)
+Insert into @t values(5, 'Onn'),(7,'Meltzer')
+
+SELECT * FROm @t
+
+
+Declare @i int = 9 , @unitprice float ;
+While @i < = 17
+	BEGIN
+		SELECT @unitprice = unitprice From Products Where ProductID = @i;
+		Print(CONCAT('The Value Of Product ',@i,' Is: ', @unitprice))
+		IF @unitprice > 50
+			Print('I Dont Like')
+		Else
+			Print('I like')
+		SET @i= @i + 1
+	END
+
+-- Case
+
+SELECT ProductID , unitprice 
+,CASE WHEN unitprice > 50 Then 'I Like!'	  --IF
+		WHEN UnitPrice > 30 Then 'MCHU MACHU' --Else If
+		ELSE 'I Dont Like'					  --Else
+		END AS Result
+From Products
+WHERE ProductID BETWEEN 9 AND 17
+
+-- Without Else.
+SELECT ProductID , unitprice 
+,CASE WHEN unitprice > 50 Then 'I Like!'	  --IF
+		WHEN UnitPrice > 30 Then 'MCHU MACHU' --Else If			  --Else
+		END AS Result
+From Products
+--WHERE ProductID >= 9 AND ProductID<= 17
+WHERE ProductID BETWEEN 9 AND 17
+
+
+-- Q5)
+SELECT ProductID , unitprice 
+,NewPrice = 
+CAST(
+	Case When unitprice<=20 Then UnitPrice * ( 1 + 0.1) --1.1
+				WHEN unitprice<=50  Then UnitPrice + 5
+				Else UnitPrice * ( 1 - 0.05) --0.95
+				END
+	AS decimal(10,2))
+From Products
+
+
+
+
+SELECT  top 5 * from OrderDetails
+SELECT  top 5 * from Products
+
+SELECT supplierid ,Count(OrderID ) as OrdersCount
+,Count(Distinct OrderID ) as DistOrdersCount
+From OrderDetails a
+Join Products b 
+ON a.ProductID = b.ProductID
+Group By supplierid
+
+SELECT supplierid, OrderID,a.ProductID 
+FROM OrderDetails a
+Join Products b ON a.ProductID = b.ProductID
+WHERE SupplierID = 15
+Order By OrderID
+
+SELECT supplierid, count(*) crowcount , 
+Count(Distinct OrderID) disordeCount
+,Count(Distinct a.ProductID ) disProductCount
+FROM OrderDetails a
+Join Products b ON a.ProductID = b.ProductID
+WHERE SupplierID = 15
+Group by supplierid
+
+
+
+-- Q15
+SELECT supplierid ,Count(Distinct OrderID ) as DistOrdersCount
+From OrderDetails a
+Join Products b 
+	ON a.ProductID = b.ProductID
+Group By supplierid
+Order By DistOrdersCount Desc
+
+-- Q15 with subquery
+select
+from , join
+where
+group by
+having
+order by 
+
+
+SELECT supplierid ,Count(Distinct OrderID) as DistOrdersCount
+From OrderDetails a
+Join Products b 
+ON a.ProductID = b.ProductID
+Group By supplierid
+HAVING Count(Distinct OrderID) = ()
+
+-- View:
+
+Create View vw_Supplier
+AS
+	SELECT supplierid ,Count(Distinct OrderID) as DistOrdersCount
+	From OrderDetails a
+	Join Products b 
+	ON a.ProductID = b.ProductID
+	Group By supplierid
+
+
+SELECT * FROM vw_Supplier a
+WHERE a.DistOrdersCount = (
+						SELECT Max(DistOrdersCount)
+						From vw_Supplier
+							)
+
+
+With CTE AS (
+
+	SELECT FirstName, LastName 
+	,FullName = FirstName+ LastName 
+	From Employees
+)
+SELECT * FROM CTE
+
+
+
+SELECT * FROM 
+		(SELECT FirstName, LastName 
+		,FullName = FirstName+ LastName 
+		From Employees) c
+
+
+
+SELECT supplierid ,Count(Distinct OrderID) as DistOrdersCount
+From OrderDetails a
+Join Products b 
+ON a.ProductID = b.ProductID
+Group By supplierid
+HAVING Count(Distinct OrderID)  = (
+	SELECT Max(DistOrdersCount)
+		From (
+		SELECT supplierid ,Count(Distinct OrderID) as DistOrdersCount
+		From OrderDetails a
+		Join Products b 
+		ON a.ProductID = b.ProductID
+		Group By supplierid
+		) tmp
+)
+
+
+With CTE AS (
+	SELECT supplierid ,Count(Distinct OrderID) as DistOrdersCount
+	From OrderDetails a
+	Join Products b 
+	ON a.ProductID = b.ProductID
+	Group By supplierid
+)
+SELECT * FROM CTE
+	WHERE DistOrdersCount = (Select Max(DistOrdersCount) From CTE)

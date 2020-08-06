@@ -1,0 +1,109 @@
+-- TSQL:
+
+-- select - Read data from tables
+-- DML : data manipulation - INSERT , UPDATE, DELETE
+-- DDL : data definition - CREATE , DROP
+-- TSQL : transact SQL , proc. lag.
+
+--BATCH
+DECLARE @i INT = 5
+PRINT(CONCAT('Batch 1 - ' , @i))
+go
+DECLARE @i INT  -- @i == NULL
+SET @i = 5		-- @i == 5
+PRINT(CONCAT('Batch 2 - ' , @i))
+go
+DECLARE @i INT
+SELECT @i = 5
+PRINT(CONCAT('Batch 3 - ' , @i))
+go
+SELECT @i as MyVar ;
+PRINT(@i)
+
+
+
+declare @s varchar(11) = '';
+SET @s = 'Hello'
+ print(@s)
+SET @s = @s + ' World'
+ print(@s)
+
+-- int = int , bigint --5 
+-- float = float , real , money , double, DECIMAL -- 5.5
+-- str = varchar(), nvarchar() , char() - 'piiza'
+-- bool = Bit (0/1) 0,1
+
+CHAR(5) = _ _ _ _ _ -- Onn _ _
+VARCHAR(5) = _ _ _ _ _ -- O n n.
+
+DECLARE @i INT = 5 , @name varchar(10) ='Onn M';
+SELECT @i as MyNum , @name as MyName
+SELECT @i = 12 , @name = 'PIZZA'
+SELECT @i , @name
+
+
+DECLARE @price Float ; -- 0.00
+	SET @price = 5.5
+	Print(@price)
+
+	SELECT @price = 15.13126546846
+	Print(@price)
+
+
+
+
+DECLARE @price Float ; -- 0.00
+
+SET @price = (SELECT UNITPRICE FROM Products a WHERE  a.ProductID = 12) -- scalar sub query
+
+SELECT @price
+
+
+ SELECT UNITPRICE 
+ FROM Products a 
+ WHERE  a.ProductID IN (10,11,12,13)
+
+DECLARE @price Float ;
+
+ SELECT @price = UNITPRICE 
+ FROM Products a 
+ WHERE  a.ProductID IN (10,11,12,13)
+
+SELECT @price
+
+
+
+
+
+
+-- use variable with DB:
+-- declare and initiate with the value 5.
+Declare @id INT = 5
+
+SELECT * FROM Products
+WHERE ProductID = @id
+GO;
+
+-- IF
+DECLARE @unitprice float, @id int = 7;
+
+SET @unitprice = (select unitprice from Products where ProductID =  @id)
+
+IF @unitprice > 20
+	BEGIN
+		Print('Wow!!!!')
+		Print('Expensivesdnjcfkasdbnfakj')
+	END
+ELSE IF @unitprice > 10
+	BEGIN
+		Print('Ok , Moderate')
+	END
+ELSE
+	BEGIN
+		Print('The Product it CHeap!!!!')
+		SET @id = 5
+		Print(CONCAT('Please check product number ',@id))
+		SET @unitprice = (select unitprice from Products where ProductID =  @id)
+		Print(@unitprice)
+	END
+	
