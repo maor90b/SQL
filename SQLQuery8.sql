@@ -205,8 +205,10 @@ ON A.ProductID=B.ProductID
 GROUP BY SupplierID ORDER BY DISTORDERSCOUNT DESC
 --Ex_16--
 
-select Productid,ProductName,UnitPrice from Products
-where UnitPrice > (select UnitPrice from Products where ProductName='alice mutton')
+select Productid,ProductName,UnitPrice 
+from Products
+where UnitPrice > 
+(select UnitPrice from Products where ProductName='alice mutton')
 
 --Ex_17--
 select *
@@ -230,3 +232,80 @@ from Customers
 select avg(unitprice)
 from [Order Details],Customers
 where Region in (select region from Customers where Region in ('wa'))
+
+
+--Ex_19--
+declare @fullname varchar(max) = 
+(select e.FirstName+' '+e.LastName 
+from Employees e where e.EmployeeID=7)
+
+select e.EmployeeID ,@fullname FullName,
+ COUNT(et.TerritoryID) etCount
+from Employees e, EmployeeTerritories et
+where e.EmployeeID=et.EmployeeID and e.EmployeeID=7 
+group by e.EmployeeID
+
+select e.EmployeeID ,e.FirstName+' '+e.LastName fullname ,
+ COUNT(et.TerritoryID) etCount
+from Employees e, EmployeeTerritories et
+where 	e.EmployeeID=et.EmployeeID and e.EmployeeID=7 
+group by e.EmployeeID,e.FirstName,e.LastName
+
+
+
+select e.EmployeeID ,e.FirstName+' '+e.LastName fullname ,
+ COUNT(et.TerritoryID) etCount
+from Employees e, EmployeeTerritories et
+where 	e.EmployeeID=7 and et.TerritoryID in (select TerritoryID from EmployeeTerritories 
+where EmployeeID=7)
+group by e.EmployeeID,e.FirstName,e.LastName
+
+--Ex_20--
+select e.EmployeeID,COUNT(et.TerritoryID) CountEt
+from Employees e join EmployeeTerritories et
+on e.EmployeeID=et.EmployeeID
+group by e.EmployeeID
+order by CountEt
+
+--Ex_21--
+select* from Customers
+select*from Employees
+
+
+select*
+from Employees e 
+where e.Region in (select Region from Customers)
+
+--Ex_22--
+select s.CompanyName,s.ContactName,p.ProductName
+from Products p join Suppliers s
+on p.SupplierID=s.SupplierID and s.SupplierID =
+(select SupplierID 
+from Suppliers where CompanyName = 'Leka Trading')
+
+--Ex_23--
+select* from Products
+
+select p.ProductName from Products p join Categories c
+on p.CategoryID=c.CategoryID 
+and c.CategoryID  in(select CategoryID from Categories 
+where CategoryName in ('beverages','condiments'))
+join Suppliers s
+on p.SupplierID in (s.SupplierID) 
+where s.SupplierID in (select SupplierID from Suppliers 
+where Region is null)
+
+
+--Ex_24--
+
+
+
+
+
+
+
+
+
+
+
+
