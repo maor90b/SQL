@@ -203,12 +203,12 @@ SELECT TOP 1 SupplierID, COUNT(DISTINCT OrderID) AS DISTORDERSCOUNT
 FROM [Order Details] A JOIN Products B
 ON A.ProductID=B.ProductID
 GROUP BY SupplierID ORDER BY DISTORDERSCOUNT DESC
+
+
 --Ex_16--
 
-select Productid,ProductName,UnitPrice 
-from Products
-where UnitPrice > 
-(select UnitPrice from Products where ProductName='alice mutton')
+select Productid,ProductName,UnitPrice from Products
+where UnitPrice > (select UnitPrice from Products where ProductName='alice mutton')
 
 --Ex_17--
 select *
@@ -232,6 +232,7 @@ from Customers
 select avg(unitprice)
 from [Order Details],Customers
 where Region in (select region from Customers where Region in ('wa'))
+
 
 
 --Ex_19--
@@ -298,12 +299,57 @@ where Region is null)
 
 --Ex_24--
 
+select*
+from Territories
+where RegionID=1
+union
+select*
+from Territories
+where RegionID=2
+order by RegionID
+
+--Ex_25--
+
+select City,CompanyName,ContactName
+from Customers
+union 
+select City,CompanyName,ContactName
+from Suppliers
+order by ContactName
+
+--Ex_26--
+select*from Customers
+
+select*from Orders
+
+select*from [Order Details]
+
+select*from Products
 
 
+select Customerid
+from Customers where country in ('france','mexico')
 
+select orderid
+from Orders
+where customerid in (select Customerid
+from Customers where country in ('france','mexico'))
 
+select productid
+from [Order Details]
+where OrderID in (select orderid
+from Orders
+where customerid in (select Customerid
+from Customers where country in ('france','mexico')))
 
-
+select*
+from Products
+where ProductID in (select productid
+from [Order Details]
+where OrderID in (select orderid
+from Orders
+where customerid in (select Customerid
+from Customers where country in ('france','mexico'))))
 
 
 

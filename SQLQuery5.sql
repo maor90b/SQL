@@ -377,7 +377,159 @@ select* from vw_Supplier1 a
 where a.DISTORDERSCOUNT= (select max(DISTORDERSCOUNT) from vw_Supplier1)
 
 
-	
+--insert--	
+
+INSERT INTO Customers (CustomerID,CompanyName, ContactName, Address, City, PostalCode, Country)
+VALUES ('Card','Philips','Tom B. Erichsen','Skagen 21','Stavanger','4006','Norway');
+
+
+select* from Customers
+where CustomerId like ('c%')
+go
+
+--update--
+use NORTHWND
+update Employees
+set lastname = 'Ben-Simon',Firstname='Adi'
+where lastname = 'cohen' and postalcode=97777
+
+select*
+from Employees
+go
+
+update Products
+set UnitPrice= UnitPrice+10
+select*
+from Products
+
+--Delete--
+delete from Employees
+where LastName= 'bartov'
+
+delete from Employees
+where Title='announcer'
+
+--ddl(data definition language)--
+
+create table orderdetails_1
+(orderid int,
+productid int,
+unitprice money, 
+quantity smallint,
+discount real)
+
+select*
+from orderdetails_1
+
+create table orderdetails_2
+(quantity smallint default (1))
+
+select*
+from orderdetails_2
+
+create table orderdetails_3
+(orderid int identity(1,1),
+productid int,
+unitprice money,
+quantity smallint default(1),
+discount real)
+
+create table employees1
+(birthdate datetime constraint ck_emolyees_birthdate Check (birthdate<getdate()))
+
+select*
+from employees1
+
+create table orderdetails_4
+(orderid int not null,
+productid int not null,
+unitprice money not null default(0),
+quantity smallint default(1),
+discount real,
+check(discount > =0 and discount <=1),
+check (quantity > 0),
+check(unitprice>=0))
+
+select*
+from orderdetails_4
+
+create table products1
+(discount real not null
+constraint ck_products_discount check(discount>=0 and discount <=1))
+
+select*
+from products1
+
+--unique
+create table orderdetails_5
+(orderid int not null,
+productid int unique)
+
+select*
+from orderdetails_5
+
+create table orderdetails_7
+(orderid int not null,
+productid int,
+unitprice money not null default(0),
+constraint un_ord_pro_id1 unique (productid))
+
+
+create table orderdeatails_8
+(orderid int primary key)
+
+create table orderdetails_9
+(orderid int not null , 
+productid int not null,
+quantity smallint not null default(1),
+primary key(orderid,productid))
+
+
+select*
+from orderdetails_9
+
+create table orderdetails_10
+(orderid int 
+references orders (orderid))
+
+select*
+from orderdetails_10
+
+
+create table orderdetails_11
+(orderid int not null , 
+productid int not null,
+unitprice money not null default(0),
+foreign key(orderid) references orders (orderid),
+foreign key(productid) references products (productid))
+
+
+select*
+into orders_1996
+from Orders
+where YEAR(OrderDate) = 1996
+
+select* from orders_1996
+
+--Alter,Drop
+Alter table orders_1996
+add firedate datetime not null default(getdate())
+
+alter table orders_1996 add 
+check(datepart(dw,firedate)!=7)
+
+
+ALter Table orders_1996
+drop constraint DF__orders_19__fired__25518C17
 
 
 
+alter table orders_1996
+drop column firedate
+
+select* from orders_1996
+
+truncate table orders_1996
+
+
+drop table orders_1996
