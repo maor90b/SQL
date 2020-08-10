@@ -1,5 +1,5 @@
 --Mission_4--
-
+use northwind
 --Ex_5--
 select ProductName,ProductID
 from Products

@@ -1,5 +1,5 @@
 --Ex_8--
-
+use northwind
 select*
 from[Order Details]
 
